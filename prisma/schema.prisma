@@ -1,0 +1,90 @@
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String
+  name     String?
+  role     String   @default("admin") // "admin" o "staff"
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  name          String
+  parentId      Int?
+  parent        Category?  @relation("Subcategories", fields: [parentId], references: [id], onDelete: SetNull)
+  subcategories Category[] @relation("Subcategories")
+  products      Product[]
+}
+
+model Product {
+  id               Int                @id @default(autoincrement())
+  name             String
+  sku              String             @unique
+  barcode          String?            @unique
+  description      String?
+  categoryId       Int
+  price            Float
+  costPrice        Float?
+  currentStock     Int                @default(0)
+  minStock         Int                @default(10)
+  supplierId       Int?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  category         Category           @relation(fields: [categoryId], references: [id])
+  supplier         Supplier?          @relation(fields: [supplierId], references: [id])
+  purchaseOrderItems PurchaseOrderItem[]
+  stockMovements   StockMovement[]
+}
+
+model Supplier {
+  id          Int              @id @default(autoincrement())
+  name        String
+  contactName String?
+  email       String?
+  phone       String?
+  address     String?
+  products    Product[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model PurchaseOrder {
+  id           Int                @id @default(autoincrement())
+  orderNumber  String             @unique
+  supplierId   Int
+  orderDate    DateTime           @default(now())
+  status       String             @default("pending") // pending, received, cancelled
+  totalAmount  Float?
+  notes        String?
+  supplier     Supplier           @relation(fields: [supplierId], references: [id])
+  items        PurchaseOrderItem[]
+}
+
+model PurchaseOrderItem {
+  id           Int           @id @default(autoincrement())
+  orderId      Int
+  productId    Int
+  quantity     Int
+  unitPrice    Float
+  purchaseOrder PurchaseOrder @relation(fields: [orderId], references: [id])
+  product      Product       @relation(fields: [productId], references: [id])
+}
+
+model StockMovement {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  type        String   // "IN" (compra), "OUT" (salida), "ADJUST"
+  quantity    Int
+  date        DateTime @default(now())
+  reference   String?  // ej: "PO-123"
+  notes       String?
+  product     Product  @relation(fields: [productId], references: [id])
+}
