@@ -1,9 +1,8 @@
 {
   "name": "backend-inventario",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy"
@@ -21,6 +20,7 @@
     "@types/express": "^5.0.0",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "nodemon": "^3.1.0"
   }
 }

@@ -1,8 +1,8 @@
 // src/index.js
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const { PrismaClient } = require('@prisma/client');
 
 dotenv.config();
 
@@ -22,10 +22,16 @@ app.get('/', (req, res) => {
 app.get('/test-db', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: 'success', message: '✅ Conexión a MySQL en Railway OK' });
+    res.json({ 
+      status: 'success', 
+      message: '✅ Conexión a MySQL en Railway OK' 
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: 'error', message: 'Error al conectar con la base de datos' });
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'Error al conectar con la base de datos' 
+    });
   }
 });
 
