@@ -2,7 +2,6 @@
   "name": "backend-inventario",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy"
